@@ -19,13 +19,21 @@ public class UserController {
     public UserController(){
         userService = new UserService(User.class);
     }
+
+    @GET
+    @Path("/hello")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String hello(){
+       return "hello";
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccounts(){
-        List<User> accounts = new ArrayList<>(userService.getAll(null, null, null, null));
+        /*List<User> accounts = new ArrayList<>(userService.getAll(null, null, null, null));
         if (accounts.size()>0){
             return Response.ok(accounts, MediaType.APPLICATION_JSON).build();
-        }
+        }*/
         return Response.noContent().build();
     }
 
@@ -33,10 +41,10 @@ public class UserController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccounts(@PathParam("id") long id){
-        User account = userService.getbyid(id);
+        /*User account = userService.getbyid(id);
         if (account==null){
             return Response.ok(account, MediaType.APPLICATION_JSON).build();
-        }
+        }*/
         return Response.noContent().build();
     }
 
@@ -44,11 +52,11 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(User user) {
-        Long id = userService.insert(user);
+        /*Long id = userService.insert(user);
         if (id!=null && id<0){
             user.setId((int)(long)id);
             return Response.status(201).entity(user).build();
-        }
+        }*/
         return Response.status(400).entity("Error in creating user").build();
     }
 
@@ -57,20 +65,20 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") long id, User user ) {
-            Integer affected = userService.update(user, id, true);
+        /*    Integer affected = userService.update(user, id, true);
         if (affected>0){
             return Response.status(200).entity("User updated").build();
-        }
+        }*/
         return Response.status(400).entity("Invalid Input for user").build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") long id) {
-        Long affected = userService.delete(id);
+        /*Long affected = userService.delete(id);
         if (affected>0){
             return Response.status(200).entity("User deleted").build();
-        }
+        }*/
         return Response.status(400).entity("User cannot be deleted").build();
     }
 }

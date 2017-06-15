@@ -1,8 +1,11 @@
-package com.classified.model;
+package com.asd.framework.model;
 
-//import com.asd.framework.dao.Entity;
+import com.asd.framework.dao.Entity;
 
-//@Entity
+/**
+ * Created by Crawlers on 6/12/2017.
+ */
+@Entity
 public class User {
     private Integer id;
     private String email;
