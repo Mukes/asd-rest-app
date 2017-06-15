@@ -1,8 +1,8 @@
 package com.classified.model;
 
-//import com.asd.framework.dao.Entity;
+import com.asd.framework.dao.Entity;
 
-//@Entity
+@Entity
 public class User {
     private Integer id;
     private String email;

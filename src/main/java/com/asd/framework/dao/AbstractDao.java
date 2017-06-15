@@ -134,7 +134,8 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         userService.update(user, 2L, false);
         User user1 = userService.getbyid(2L);
         System.out.println("Single user:"+user1);
-
+        List<User> users =userService.getAll(null, null, null, null);
+        System.out.println("users:"+users);
     }
 
 }

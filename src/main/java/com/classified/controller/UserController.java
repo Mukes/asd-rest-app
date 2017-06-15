@@ -30,10 +30,12 @@ public class UserController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccounts(){
-        /*List<User> accounts = new ArrayList<>(userService.getAll(null, null, null, null));
-        if (accounts.size()>0){
-            return Response.ok(accounts, MediaType.APPLICATION_JSON).build();
-        }*/
+        List<User> users = new ArrayList<>(userService.getAll(null, null, null, null));
+        System.out.println("Users:"+users);
+        if (users.size()>0){
+            Response response=  Response.ok(users, MediaType.APPLICATION_JSON).build();
+            return response;
+        }
         return Response.noContent().build();
     }
 
