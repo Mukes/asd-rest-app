@@ -1,6 +1,7 @@
 package com.asd.framework.service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Crawlers on 8/15/2016.
@@ -17,5 +18,7 @@ public interface IService<T> {
   public T getbyid(Long id);
 
   public Long delete(Long id);
+
+  List<T> customGetAll(Map<String, String> conditionMap);
 
 }

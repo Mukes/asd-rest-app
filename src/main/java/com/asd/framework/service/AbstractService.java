@@ -27,26 +27,28 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
         template();
     }
 
-    private final void template(){
+    private final void template() {
         //Algorithm Steps
         initDao();
         initStringBuilder();
     }
 
-    private void initDao(){
+    private void initDao() {
         this.dao = new AbstractDao<>();
     }
-    private void initStringBuilder(){
+
+    private void initStringBuilder() {
         columns = new StringBuilder();
         values = new StringBuilder();
         statement = new StringBuilder();
     }
+
     @Override
     public Long insert(T t) {
         //Send response from here if not valid
         Map<Boolean, List<ErrorMessage>> map = validate(t);
         if (getFirstKey(map)) {
-            if (t instanceof AbstractMetaData){
+            if (t instanceof AbstractMetaData) {
                 ((AbstractMetaData) t).setCreatedAt(getCurrentDateTime());
             }
             columnToValueMap = classToDbFieldMap(t.getClass());
@@ -64,25 +66,25 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
     @Override
     public Integer update(T t, Long id, boolean validate) {
         boolean isValid = true;
-        if (validate){
+        if (validate) {
             Map<Boolean, List<ErrorMessage>> map = validate(t);
             isValid = getFirstKey(map);
         }
 
         if (isValid) {
-            if (t instanceof AbstractMetaData){
+            if (t instanceof AbstractMetaData) {
                 ((AbstractMetaData) t).setUpdatedAt(getCurrentDateTime());
             }
             Long row = dao.update(getTableName(t), updateStatement(t), id);
-            return (int)(long)row;
+            return (int) (long) row;
         } else {
             return null;
         }
     }
 
-    public Integer updateCustom(Long id, String statement, Class clazz){
+    public Integer updateCustom(Long id, String statement, Class clazz) {
         Long row = dao.update(getTableName(clazz), statement, id);
-        return (int)(long)row;
+        return (int) (long) row;
     }
 
     @Override
@@ -97,16 +99,20 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
 
     public List<T> getAll(String searchText, List<String> searchFields, String offset, String limit, Class clazz, boolean isOverridden) {
         String condition = null;
-        if (isOverridden){
+        if (isOverridden) {
             condition = getCondition(searchText, searchFields);
         }
         List<T> t = dao.getAll(getTableName(clazz), getRelation(classToDbFieldMap(clazz)), condition, getPagination(offset, limit), clazz);
         System.out.println("Got T:" + t.toString());
+        if (t == null) {
+            t = new ArrayList<>();
+        }
         return t;
     }
 
-    public List<T> customGetAll(String condition, Class clazz) {
-        List<T> t = dao.getAll(getTableName(clazz), getRelation(classToDbFieldMap(clazz)), condition, null, clazz);
+    @Override
+    public List<T> customGetAll(Map<String, String> conditionMap) {
+        List<T> t = dao.getAll(getTableName(clazz), getRelation(classToDbFieldMap(clazz)), getCustomCondition(conditionMap), null, clazz);
         return t;
     }
 
@@ -143,12 +149,12 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
     }*/
         while (clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
-                if (!field.getName().equalsIgnoreCase("serialVersionUID")){
+                if (!field.getName().equalsIgnoreCase("serialVersionUID")) {
                     //map.put(field.getName(), snakeCase(field.getName()));
                     map.put(field.getName(), (field.getName()));
                 }
             }
-            clazz = clazz .getSuperclass();
+            clazz = clazz.getSuperclass();
         }
         return map;
     }
@@ -159,7 +165,7 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
             for (PropertyDescriptor property : Introspector.getBeanInfo(bean.getClass()).getPropertyDescriptors()) {
                 String name = property.getName();
                 Object value = property.getReadMethod().invoke(bean);
-                if (!name.equalsIgnoreCase("id")){
+                if (!name.equalsIgnoreCase("id")) {
                     if (value instanceof String || value instanceof Enum) {
                         value = "'" + value + "'";
                     }
@@ -206,7 +212,7 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
         return statement.toString();
     }
 
-    private String getRelation(Map<String, String> columnToValueMap){
+    private String getRelation(Map<String, String> columnToValueMap) {
         columns.setLength(0);
         Iterator it = columnToValueMap.entrySet().iterator();
         while (it.hasNext()) {
@@ -219,7 +225,7 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
         return columns.toString();
     }
 
-    private String getCondition(String searchText, List<String> searchFields){
+    private String getCondition(String searchText, List<String> searchFields) {
         if (searchText != null && searchFields.size() > 0) {
             StringBuilder query = new StringBuilder();
             query.append("(");
@@ -233,7 +239,7 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
         return null;
     }
 
-    private String getPagination(String offset, String limit){
+    private String getPagination(String offset, String limit) {
         StringBuilder pagination = new StringBuilder();
         if (limit != null) {
             pagination.append(" LIMIT ").append(limit);
@@ -244,20 +250,27 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
         return pagination.toString();
     }
 
-    private String getCurrentDateTime(){
+    private String getCurrentDateTime() {
         Date date = new Date();
         DateFormat readFormat = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-        DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+        DateFormat writeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStr = null;
         try {
             dateStr = readFormat.parse(date.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return writeFormat.format(dateStr);
     }
 
-    private Boolean getFirstKey(Map<Boolean, List<ErrorMessage>> map){
+    private String getCustomCondition(Map<String, String> customMap) {
+        final StringBuilder condition = new StringBuilder();
+        customMap.forEach((k, v) -> condition.append(k + "='" + v + "'"));
+        System.out.println("custom condition:"+condition.toString());
+        return condition.toString();
+    }
+
+    private Boolean getFirstKey(Map<Boolean, List<ErrorMessage>> map) {
         return map.keySet().iterator().next();
     }
 }
