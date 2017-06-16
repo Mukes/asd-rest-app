@@ -1,7 +1,5 @@
 package com.classified.model;
 
-//import com.asd.framework.dao.Entity;
-
 import com.asd.framework.dao.Entity;
 
 @Entity
