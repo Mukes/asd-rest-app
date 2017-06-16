@@ -2,38 +2,22 @@ package com.classified.model;
 
 import com.asd.framework.dao.Entity;
 
+/**
+ * Created by 985552 on 6/15/2017.
+ */
 @Entity
 public class User {
-    private Integer id;
-    private String email;
+    private Long id;
     private String name;
+    private String email;
+    private String phone;
+    private String password;
 
-    public User() {
-    }
-
-    public User(String email) {
-        this.email = email;
-    }
-
-    public User(Integer id, String email) {
-        this.id = id;
-        this.email = email;
-        this.name=name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -45,11 +29,38 @@ public class User {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-            "id=" + id +
-            ", email='" + email + '\'' +
-            '}';
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
