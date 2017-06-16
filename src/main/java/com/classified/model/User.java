@@ -6,6 +6,7 @@ import com.asd.framework.dao.Entity;
 public class User {
     private Integer id;
     private String email;
+    private String name;
 
     public User() {
     }
@@ -17,6 +18,7 @@ public class User {
     public User(Integer id, String email) {
         this.id = id;
         this.email = email;
+        this.name=name;
     }
 
     public String getEmail() {
@@ -33,6 +35,14 @@ public class User {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

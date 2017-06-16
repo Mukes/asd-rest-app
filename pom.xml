@@ -74,7 +74,4 @@
         </dependency>
     </dependencies>
 
-    <!--<modules>
-        <module>../lab4/asd-rest</module>
-    </modules>-->
 </project>
