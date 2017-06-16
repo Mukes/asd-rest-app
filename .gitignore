@@ -6,5 +6,8 @@ asd-rest.iml
 asd-rest-app.iml
 *.iml
 /target
+asd-app.iml
+.idea
+target
 
 

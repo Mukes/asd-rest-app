@@ -69,7 +69,7 @@
         </dependency>
     </dependencies>
 
-    <modules>
+    <!--<modules>
         <module>../lab4/asd-rest</module>
-    </modules>
+    </modules>-->
 </project>
