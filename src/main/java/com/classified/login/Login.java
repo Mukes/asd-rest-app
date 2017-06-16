@@ -6,7 +6,7 @@ import com.classified.service.UserService;
 import java.util.List;
 
 public class Login implements ILogin{
-    public UserService userService;
+    private UserService userService;
     @Override
     public Long login(String email, String password) {
         userService=new UserService(User.class);

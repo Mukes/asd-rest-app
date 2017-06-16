@@ -19,6 +19,7 @@ public class UserService extends AbstractService<User> {
         map.put("password", password);
         List<User> users = customGetAll(map);
         if (users.size() > 0) {
+            System.out.println("Login Successfull");
             id = users.get(0).getId();
             return id;
         } else {

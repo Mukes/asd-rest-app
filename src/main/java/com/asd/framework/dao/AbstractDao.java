@@ -5,6 +5,7 @@ import com.asd.framework.model.User;
 import com.asd.framework.service.UserService;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
@@ -26,7 +27,7 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
     }*/
 
     public Long insert(String tableName, String columnNames, String values) {
-        String sql=insertStatement(tableName, columnNames, values);
+        String sql = insertStatement(tableName, columnNames, values);
         return executeUpdate(sql, null);
     }
 
@@ -39,15 +40,15 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         return executeUpdate(deleteStatement(tableName, id), id);
     }
 
-    private Long executeUpdate(String sql, Long id){
-        Integer updateId=0;
+    private Long executeUpdate(String sql, Long id) {
+        Integer updateId = 0;
         try {
-            preparedStatement=connection.prepareStatement(sql);
-            updateId= preparedStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            if (updateId<1){
-                updateId=(int)(long)id;
+            preparedStatement = connection.prepareStatement(sql);
+            updateId = preparedStatement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            if (updateId < 1) {
+                updateId = (int) (long) id;
             }
-            if (id==null){
+            if (id == null) {
                 ResultSet rs = preparedStatement.getGeneratedKeys();
 
                 if (rs.next()) {
@@ -56,15 +57,14 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 preparedStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return (long)updateId;
+        return (long) updateId;
     }
 
     public T get(String tableName, String relation, String condition, Class clazz) {
@@ -75,7 +75,7 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         return executeQuery(tableName, relation, condition, pagination, clazz);
     }
 
-    private List<T> executeQuery(String tableName, String relation, String condition, String pagination, Class clazz){
+    private List<T> executeQuery(String tableName, String relation, String condition, String pagination, Class clazz) {
         String query = getQuery(tableName, relation, condition, pagination);
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -85,6 +85,9 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         }
         // simple JDBC code to run SQL query and populate resultSet - END
         List<T> list = resultSetMapper.mapRersultSetToObject(resultSet, clazz);
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         return list;
     }
 
@@ -97,31 +100,31 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         return id;
     }*/
 
-    private String insertStatement(String tableName, String columnNames, String values){
-        String insertStr = "INSERT INTO "+tableName+" ( "+ columnNames+" ) VALUES ( "+values+" )";
-        System.out.println("Insert Statement:"+insertStr);
+    private String insertStatement(String tableName, String columnNames, String values) {
+        String insertStr = "INSERT INTO " + tableName + " ( " + columnNames + " ) VALUES ( " + values + " )";
+        System.out.println("Insert Statement:" + insertStr);
         return insertStr;
     }
 
-    private String updateStatement(String tableName, String statement, Long id){
-        String updateStr = "UPDATE "+tableName+" SET "+ statement+" WHERE id =  "+id;
-        System.out.println("Update Statement:"+updateStr);
+    private String updateStatement(String tableName, String statement, Long id) {
+        String updateStr = "UPDATE " + tableName + " SET " + statement + " WHERE id =  " + id;
+        System.out.println("Update Statement:" + updateStr);
         return updateStr;
     }
 
-    private String deleteStatement(String tableName, Long id){
-        return "DELETE FROM "+tableName+" WHERE id =  "+id;
+    private String deleteStatement(String tableName, Long id) {
+        return "DELETE FROM " + tableName + " WHERE id =  " + id;
     }
 
-    private String getQuery(String tableName, String relation, String condition, String pagination){
-        String query = "SELECT "+relation+" FROM "+ tableName;
-        if (condition!=null){
-            query+=" WHERE "+condition;
+    private String getQuery(String tableName, String relation, String condition, String pagination) {
+        String query = "SELECT " + relation + " FROM " + tableName;
+        if (condition != null) {
+            query += " WHERE " + condition;
         }
-        if (pagination!=null){
-            query+=pagination;
+        if (pagination != null) {
+            query += pagination;
         }
-        System.out.println("Query:"+query);
+        System.out.println("Query:" + query);
         return query;
     }
 
@@ -133,9 +136,9 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         user.setEmail("newe email");
         userService.update(user, 2L, false);
         User user1 = userService.getbyid(2L);
-        System.out.println("Single user:"+user1);
-        List<User> users =userService.getAll(null, null, null, null);
-        System.out.println("users:"+users);
+        System.out.println("Single user:" + user1);
+        List<User> users = userService.getAll(null, null, null, null);
+        System.out.println("users:" + users);
     }
 
 }
