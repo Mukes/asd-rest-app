@@ -1,5 +1,6 @@
 package com.classified.service;
 
+import com.classified.model.Authorization;
 import com.classified.model.User;
 import com.asd.framework.service.AbstractService;
 
@@ -21,6 +22,8 @@ public class UserService extends AbstractService<User> {
         if (users.size() > 0) {
             System.out.println("Login Successfull");
             id = users.get(0).getId();
+            AuthorizationService authorizationService = new AuthorizationService(Authorization.class);
+            String token=authorizationService.generateToken(id);
             return id;
         } else {
             System.out.println("User name or password incorrect");
