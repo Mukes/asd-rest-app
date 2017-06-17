@@ -12,7 +12,8 @@ public class ProxyLogin implements ILogin{
 
     public static void main(String[] args) {
         ILogin proxyLogin=new ProxyLogin();
-        System.out.println(proxyLogin.login("zam@gmail.comm","123"));
+        proxyLogin.login("zam@gmail.comm","123");
+        proxyLogin.login("zam@gmail.com","123");
     }
 
 }
