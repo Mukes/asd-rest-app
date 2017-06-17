@@ -4,20 +4,25 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-<!--    <servlet>
+    <!--<servlet>
         <servlet-name>Jersey RESTful Application</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
-           <param-name>jersey.config.server.provider.packages</param-name>
-           <param-value>
-              com.jersey.jaxb,
-              com.fasterxml.jackson.jaxrs.json
-           </param-value>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                &lt;!&ndash;com.jersey.jaxb,
+                com.fasterxml.jackson.jaxrs.json,&ndash;&gt;
+                com.classified.filter
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+            <param-value>com.classified.filter.AuthorizationFilter</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey RESTful Application</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>-->
 
 </web-app>

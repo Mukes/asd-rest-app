@@ -266,7 +266,6 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
     private String getCustomCondition(Map<String, String> customMap) {
         final StringBuilder condition = new StringBuilder();
         customMap.forEach((k, v) -> condition.append(k + "='" + v + "' AND "));
-        System.out.println("custom condition:"+condition.toString());
         condition.delete(condition.lastIndexOf(" AND "), condition.lastIndexOf(" AND ") + 3);
         return condition.toString();
     }

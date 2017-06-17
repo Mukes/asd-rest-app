@@ -1,39 +1,50 @@
 package com.classified.filter;
 
 import com.asd.framework.authorisation.AbstractHandler;
-import com.asd.framework.authorisation.IChainBuilder;
+import com.asd.framework.authorisation.AbstractChainBuilder;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
 @Provider
-public class AuthorizationFilter implements ContainerRequestFilter{
+@WebFilter(filterName = "AuthenticationFilter", urlPatterns = { "/*" })
+public class AuthorizationFilter implements Filter{
     private ChainBuilder chainBuilder;
 
-    public AuthorizationFilter() {
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
         this.chainBuilder = new ChainBuilder();
     }
 
     @Override
-    public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-        Response.ResponseBuilder responseBuilder = null;
-        Response response = null;
-        System.out.println("filter() on ServerAuthenticationRequestFilter");
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        if (!chainBuilder.getAbstractHandler().authorizeRequest(containerRequestContext)){
-            responseBuilder = Response.serverError();
-            response = responseBuilder.status(Response.Status.BAD_REQUEST).build();
-            containerRequestContext.abortWith(response);
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+
+        System.out.println("handler:"+chainBuilder.getAbstractHandler());
+        if (!chainBuilder.getAbstractHandler().authorizeRequest(httpServletRequest)){
+            httpServletResponse.setContentType("application/json");
+            httpServletResponse.setStatus(Response.Status.FORBIDDEN.getStatusCode());
+            return;
         }else {
             System.out.println("Success");
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
+        /*if (containPath || user!=null){
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        }else {
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath()+"/login");
+        }*/
     }
 
-    public class ChainBuilder implements IChainBuilder{
-        private AbstractHandler abstractHandler;
+    public class ChainBuilder extends AbstractChainBuilder {
+
         @Override
         public void buildChain() {
             AbstractHandler urlHandler = new UrlHandler();

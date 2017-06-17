@@ -1,12 +1,16 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.io.Serializable;
 
 /**
  * Created by 985552 on 6/15/2017.
  */
 @Entity
-public class User {
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+public class User implements Serializable{
     private Long id;
     private String name;
     private String email;
