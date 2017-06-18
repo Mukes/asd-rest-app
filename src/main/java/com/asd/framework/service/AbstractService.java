@@ -2,9 +2,10 @@ package com.asd.framework.service;
 
 import com.asd.framework.dao.AbstractDao;
 import com.asd.framework.error.ErrorMessage;
-import com.asd.framework.model.AbstractMetaData;
+//import com.asd.framework.model.AbstractMetaData;
 import com.asd.framework.validation.FacadeValidator;
 
+import javax.ws.rs.core.Response;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -12,7 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class AbstractService<T> extends FacadeValidator<T> implements com.asd.framework.service.IService<T> {
+public class AbstractService<T> extends FacadeValidator<T> implements IService<T> {
     private StringBuilder statement;
     private StringBuilder columns;
     private StringBuilder values;
@@ -44,13 +45,13 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
     }
 
     @Override
-    public Long insert(T t) {
+    public Object insert(T t) {
         //Send response from here if not valid
         Map<Boolean, List<ErrorMessage>> map = validate(t);
         if (getFirstKey(map)) {
-            if (t instanceof AbstractMetaData) {
+            /*if (t instanceof AbstractMetaData) {
                 ((AbstractMetaData) t).setCreatedAt(getCurrentDateTime());
-            }
+            }*/
             columnToValueMap = classToDbFieldMap(t.getClass());
             valueMap = mapProperties(t);
             if (valueMap != null) {
@@ -60,25 +61,26 @@ public class AbstractService<T> extends FacadeValidator<T> implements com.asd.fr
                 return id;
             }
         }
-        return null;
+        return map.get(getFirstKey(map));
     }
 
     @Override
-    public Integer update(T t, Long id, boolean validate) {
+    public Object update(T t, Long id, boolean validate) {
         boolean isValid = true;
+        Map<Boolean, List<ErrorMessage>> map=null;
         if (validate) {
-            Map<Boolean, List<ErrorMessage>> map = validate(t);
+            map = validate(t);
             isValid = getFirstKey(map);
         }
 
         if (isValid) {
-            if (t instanceof AbstractMetaData) {
+            /*if (t instanceof AbstractMetaData) {
                 ((AbstractMetaData) t).setUpdatedAt(getCurrentDateTime());
-            }
+            }*/
             Long row = dao.update(getTableName(t), updateStatement(t), id);
             return (int) (long) row;
         } else {
-            return null;
+            return map.get(getFirstKey(map));
         }
     }
 

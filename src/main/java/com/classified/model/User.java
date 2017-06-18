@@ -1,6 +1,8 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.asd.framework.validation.constraints.*;
+import com.asd.framework.validation.constraints.Number;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
@@ -13,6 +15,12 @@ import java.io.Serializable;
 public class User implements Serializable{
     private Long id;
     private String name;
+    @Email
+    @Password
+    @Number
+    @Url
+    @DateTime
+    @Length(min = 10, max = 500)
     private String email;
     private String phone;
     private String password;

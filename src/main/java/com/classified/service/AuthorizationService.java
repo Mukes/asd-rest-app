@@ -33,11 +33,21 @@ public class AuthorizationService extends AbstractService<Authorization> {
        else{
            token = UUID.randomUUID().toString().replaceAll("-", "");
            System.out.println(LocalDate.now());
-           Long id = insert(new Authorization(credentials,token, LocalDate.now()));
+           Long id = (Long) insert(new Authorization(credentials,token, LocalDate.now()));
            map.put("id",String.valueOf(id));
            List<Authorization> authorizations=customGetAll(map);
            System.out.println(authorizations.get(0).getToken());
            return authorizations.get(0).getToken();
        }
+    }
+
+    public Authorization getTokenByName(String token) {
+        Map<String, String> map = new HashMap<>();
+        map.put("token", token);
+        List<Authorization> authorizations = customGetAll(map);
+        if (authorizations.size() > 0) {
+           return authorizations.get(0);
+        }
+        return null;
     }
 }

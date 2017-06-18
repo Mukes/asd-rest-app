@@ -8,7 +8,7 @@ import java.util.List;
 public class Login implements ILogin{
     private UserService userService;
     @Override
-    public Long login(String email, String password) {
+    public Object login(String email, String password) {
         userService=new UserService(User.class);
         return userService.login(email,password);
     }

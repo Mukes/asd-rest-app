@@ -1,5 +1,6 @@
 package com.asd.framework.restclient;
 
+import com.asd.framework.error.ErrorMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -25,6 +26,9 @@ public class PostClient<T> extends AbstractClient<T>{
             conn.setDoOutput(true);
             conn.setRequestMethod(method.toString());
 
+            conn.addRequestProperty("User-Agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
+
             conn.setRequestProperty("Content-Type", "application/json");
 
             headerMap.forEach((k, v) -> conn.setRequestProperty(k, v));
@@ -44,24 +48,32 @@ public class PostClient<T> extends AbstractClient<T>{
                     break;
                 }
             }
-            System.out.println("isSuccess:"+isSuccess);
+            BufferedReader br = null;
+            if (isSuccess){
+                br =new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            }else {
+                br =new BufferedReader(new InputStreamReader(
+                    (conn.getErrorStream())));
+            }
+            StringBuilder response = new StringBuilder();
+            String output;
+            while ((output = br.readLine()) != null) {
+                response.append(output);
+            }
+
             if (!isSuccess) {
-                obj = "Failed : HTTP error code :" + conn.getResponseCode();
+                if (conn.getResponseCode()==406){
+                    obj = objectMapper.readValue(response.toString(),
+                        TypeFactory.defaultInstance().constructCollectionType(List.class,
+                            ErrorMessage.class));
+                }else {
+                    obj = "Failed : HTTP error code :" + conn.getResponseCode();
+                }
                 /*throw new RuntimeException("Failed : HTTP error code : "
                     + conn.getResponseCode());*/
                 System.out.println("Error:"+obj);
             } else {
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-                StringBuilder response = new StringBuilder();
-                String output;
-                while ((output = br.readLine()) != null) {
-                    response.append(output);
-                }
-
-                System.out.println("Response:" + response.toString());
-
                 obj = objectMapper.readValue(response.toString(), clazz);
             }
             conn.disconnect();

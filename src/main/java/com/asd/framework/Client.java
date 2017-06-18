@@ -23,10 +23,13 @@ public class Client {
         user.setName("pass");
         user.setPassword("pass");
         Map<String, String> map = new HashMap<>();
-        map.put("Authorization", "Bearer 1234");
-        List<User> user1 =  (List<User>)ClientFactory.getClientFactory()
-        //User user1 =  (User) ClientFactory.getClientFactory()
-            .getClient(Method.GET_ALL).headers(map).data(user)
-            .execute("http://localhost:8080/api/user", User.class);
+        String token = "ac59789228894429a678be5f4e2e6a85";
+        map.put("Authorization", "Bearer "+token);
+        //List<User> user1 =  (List<User>)ClientFactory.getClientFactory()
+        List<ErrorMessage> user1 =  (List<ErrorMessage>) ClientFactory.getClientFactory()
+            .getClient(Method.POST).headers(map).data(user)
+            .execute("http://localhost:8080/api/user", ErrorMessage.class);
+        System.out.println(user1);
+
     }
 }
