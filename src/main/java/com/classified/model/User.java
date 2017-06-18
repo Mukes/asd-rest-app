@@ -1,6 +1,8 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.asd.framework.validation.constraints.Email;
+import com.asd.framework.validation.constraints.Password;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
