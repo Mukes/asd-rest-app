@@ -1,6 +1,8 @@
 package com.classified.controller;
 
+import com.asd.framework.error.ErrorMessage;
 import com.classified.model.User;
+import com.classified.model.UserWithToken;
 import com.classified.service.UserService;
 
 import javax.ws.rs.*;
@@ -46,24 +48,47 @@ public class UserController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(User user) {
-        Long id = userService.insert(user);
-        if (id != null && id > 0) {
-            user.setId(id);
-            return Response.status(201).entity(user).build();
+        Object obj = userService.insert(user);
+        List errors = null;
+        System.out.println("instance of obj:"+obj);
+        if (obj instanceof Long){
+            Long id = (Long) obj;
+            if (id != null && id > 0) {
+                user.setId(id);
+                return Response.status(201).entity(user).build();
+            }
+        }else {
+            if (obj instanceof List){
+                errors = (ArrayList<ErrorMessage>) obj;
+                System.out.println("error:"+errors);
+            }
         }
-        return Response.status(400).entity("Error in creating user").build();
+
+        return Response.status(406).entity(errors).build();
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") long id, User user) {
-        Integer affected = userService.update(user, id, true);
-        if (affected > 0) {
-            user.setId(id);
-            return Response.status(200).entity(user).build();
+        Object obj = userService.update(user, id, true);
+        List errors = null;
+
+        if (obj instanceof Long){
+            Long id1 = (Long) obj;
+            if (id1 != null && id1 > 0) {
+                user.setId(id);
+                return Response.status(200).entity(user).build();
+            }
+        }else {
+
+            if (obj instanceof List){
+                errors = (ArrayList<ErrorMessage>) obj;
+                System.out.println(errors);
+            }
         }
-        return Response.status(400).entity("Invalid Input for user").build();
+        System.out.println(errors);
+        return Response.status(406).entity(errors).build();
     }
 
     @DELETE
@@ -72,6 +97,16 @@ public class UserController {
         Long affected = userService.delete(id);
         if (affected > 0) {
             return Response.status(200).entity("User deleted").build();
+        }
+        return Response.status(400).entity("User cannot be deleted").build();
+    }
+
+    @POST
+    @Path("/login")
+    public Response login(User user) {
+        UserWithToken userWithToken = userService.login(user.getEmail(), user.getPassword());
+        if (userWithToken != null) {
+            return Response.status(200).entity(userWithToken).build();
         }
         return Response.status(400).entity("User cannot be deleted").build();
     }

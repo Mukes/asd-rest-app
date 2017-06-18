@@ -42,7 +42,7 @@ public class PostController {
         return Response.noContent().build();
     }
 
-    @POST
+    /*@POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Post post) {
         System.out.println("Post");
@@ -64,7 +64,7 @@ public class PostController {
             return Response.status(200).entity(post).build();
         }
         return Response.status(400).entity("Invalid Input for post").build();
-    }
+    }*/
 
     @DELETE
     @Path("/{id}")

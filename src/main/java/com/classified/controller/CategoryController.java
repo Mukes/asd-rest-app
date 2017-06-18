@@ -43,7 +43,7 @@ public class CategoryController {
         return Response.noContent().build();
     }
 
-    @POST
+    /*@POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Category category) {
         Long id = categoryService.insert(category);
@@ -64,7 +64,7 @@ public class CategoryController {
             return Response.status(200).entity(category).build();
         }
         return Response.status(400).entity("Invalid Input for category").build();
-    }
+    }*/
 
     @DELETE
     @Path("/{id}")

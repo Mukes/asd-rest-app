@@ -1,8 +1,6 @@
 package com.asd.framework.dao;
 
 import com.asd.framework.database.Datasource;
-import com.asd.framework.model.User;
-import com.asd.framework.service.UserService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -126,19 +124,6 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
         }
         System.out.println("Query:" + query);
         return query;
-    }
-
-    public static void main(String[] args) {
-        User user = new User("email");
-
-        UserService userService = new UserService(User.class);
-
-        user.setEmail("newe email");
-        userService.update(user, 2L, false);
-        User user1 = userService.getbyid(2L);
-        System.out.println("Single user:" + user1);
-        List<User> users = userService.getAll(null, null, null, null);
-        System.out.println("users:" + users);
     }
 
 }
