@@ -49,6 +49,7 @@ public class PostController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Post post) {
+        System.out.println("post calleds");
         Object obj = postService.insert(post);
         List errors = null;
         if (obj instanceof Long){
@@ -97,7 +98,7 @@ public class PostController {
         return Response.status(400).entity("Post cannot be deleted").build();
     }
 
-    @POST
+    /*@POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
@@ -127,7 +128,7 @@ public class PostController {
             }
         }
         return Response.status(406).entity(errors).build();
-    }
+    }*/
 
     // save uploaded file to new location
     private void writeToFile(InputStream uploadedInputStream,
@@ -160,7 +161,7 @@ public class PostController {
             e.printStackTrace();
         }
         FormDataContentDisposition formDataContentDisposition=null;
-        postController.uploadFile(uploadedInputStream,formDataContentDisposition, new Post());
+        //postController.uploadFile(uploadedInputStream,formDataContentDisposition, new Post());
     }
 
 }

@@ -1,6 +1,10 @@
 package com.classified;
 
+import com.classified.controller.CategoryController;
+import com.classified.controller.MessageController;
+import com.classified.controller.PostController;
 import com.classified.controller.UserController;
+import com.classified.model.UserPreference;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -13,6 +17,10 @@ public class RestApplication extends Application {
     public Set<Class<?>> getClasses() {
         HashSet h = new HashSet<Class<?>>();
         h.add( UserController.class );
+        h.add( PostController.class );
+        h.add( CategoryController.class );
+        h.add( MessageController.class );
+        h.add( UserPreference.class );
         return h;
     }
 }
