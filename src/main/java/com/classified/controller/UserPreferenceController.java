@@ -18,6 +18,8 @@ import java.util.List;
 /**
  * Created by Zamuna on 6/18/2017.
  */
+@Path("/userPreference")
+@Produces(MediaType.APPLICATION_JSON)
 public class UserPreferenceController {
     private UserPreferenceService userPreferenceService;
 
@@ -26,8 +28,8 @@ public class UserPreferenceController {
     }
 
     @GET
-    public Response getUserPreferences() {
-        List<UserPreference> userPreferences = new ArrayList<>(userPreferenceService.getAll(null, null, null, null));
+    public Response getUserPreferences(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
+        List<UserPreference> userPreferences = new ArrayList<>(userPreferenceService.getAll(search, null, offset, limit));
         System.out.println("UserPreferences:" + userPreferences);
         if (userPreferences.size() > 0) {
             Response response = Response.ok(userPreferences, MediaType.APPLICATION_JSON).build();

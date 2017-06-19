@@ -5,13 +5,11 @@ import com.classified.model.Post;
 import com.classified.service.PostService;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +26,8 @@ public class PostController {
     }
 
     @GET
-    public Response getPosts() {
-        List<Post> posts = new ArrayList<>(postService.getAll(null, null, null, null));
+    public Response getPosts(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
+        List<Post> posts = new ArrayList<>(postService.getAll(search, null, offset, limit));
         System.out.println("Posts:" + posts);
         if (posts.size() > 0) {
             Response response = Response.ok(posts, MediaType.APPLICATION_JSON).build();
@@ -48,29 +46,46 @@ public class PostController {
         return Response.noContent().build();
     }
 
-    /*@POST
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Post post) {
-        System.out.println("Post");
-        Long id = postService.insert(post);
-        if (id != null && id > 0) {
-            post.setId(id);
-            return Response.status(201).entity(post).build();
+        Object obj = postService.insert(post);
+        List errors = null;
+        if (obj instanceof Long){
+            Long id = (Long) obj;
+            if (id != null && id > 0) {
+                post.setId(id);
+                return Response.status(201).entity(post).build();
+            }
+        }else {
+            if (obj instanceof List){
+                errors = (ArrayList<ErrorMessage>) obj;
+            }
         }
-        return Response.status(400).entity("Error in creating post").build();
+        return Response.status(406).entity(errors).build();
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") long id, Post post) {
-        Integer affected = postService.update(post, id, true);
-        if (affected > 0) {
-            post.setId(id);
-            return Response.status(200).entity(post).build();
+        Object obj = postService.update(post, id, true);
+        List errors = null;
+        if (obj instanceof Integer){
+            Integer id1 = (Integer) obj;
+            if (id1 != null && id1 > 0) {
+                post.setId(id);
+                return Response.status(200).entity(post).build();
+            }
+        }else {
+
+            if (obj instanceof List){
+                errors = (ArrayList<ErrorMessage>) obj;
+                System.out.println(errors);
+            }
         }
-        return Response.status(400).entity("Invalid Input for post").build();
-    }*/
+        return Response.status(406).entity(errors).build();
+    }
 
     @DELETE
     @Path("/{id}")
@@ -89,7 +104,7 @@ public class PostController {
                                @FormDataParam("file") FormDataContentDisposition fileDetail, Post post){
 
         System.out.println("Checking ");
-        String uploadedFileLocation = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+"postImage"+File.separator+fileDetail.getName();
+        String uploadedFileLocation = System.getProperty("post.dir")+File.separator+"src"+File.separator+"main"+File.separator+"postImage"+File.separator+fileDetail.getName();
         System.out.println("New Location is: "+uploadedFileLocation);
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
@@ -136,7 +151,7 @@ public class PostController {
     }
 
     public static void main(String[] args) {
-        File file=new File("C:\\Users\\Zamuna\\Desktop\\car.png");
+        File file=new File("C:\\Posts\\Zamuna\\Desktop\\car.png");
         PostController postController=new PostController();
         InputStream uploadedInputStream=null;
         try {

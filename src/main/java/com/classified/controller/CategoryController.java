@@ -1,5 +1,6 @@
 package com.classified.controller;
 
+import com.asd.framework.error.ErrorMessage;
 import com.classified.model.Category;
 import com.classified.service.CategoryService;
 
@@ -23,8 +24,8 @@ public class CategoryController {
     }
 
     @GET
-    public Response getCategorys() {
-        List<Category> categorys = new ArrayList<>(categoryService.getAll(null, null, null, null));
+    public Response getCategorys(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
+        List<Category> categorys = new ArrayList<>(categoryService.getAll(search, null, offset, limit));
         System.out.println("Categorys:" + categorys);
         if (categorys.size() > 0) {
             Response response = Response.ok(categorys, MediaType.APPLICATION_JSON).build();
@@ -43,28 +44,46 @@ public class CategoryController {
         return Response.noContent().build();
     }
 
-    /*@POST
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Category category) {
-        Long id = categoryService.insert(category);
-        if (id != null && id > 0) {
-            category.setId(id);
-            return Response.status(201).entity(category).build();
+        Object obj = categoryService.insert(category);
+        List errors = null;
+        if (obj instanceof Long){
+            Long id = (Long) obj;
+            if (id != null && id > 0) {
+                category.setId(id);
+                return Response.status(201).entity(category).build();
+            }
+        }else {
+            if (obj instanceof List){
+                errors = (ArrayList<ErrorMessage>) obj;
+            }
         }
-        return Response.status(400).entity("Error in creating category").build();
+        return Response.status(406).entity(errors).build();
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") long id, Category category) {
-        Integer affected = categoryService.update(category, id, true);
-        if (affected > 0) {
-            category.setId(id);
-            return Response.status(200).entity(category).build();
+        Object obj = categoryService.update(category, id, true);
+        List errors = null;
+        if (obj instanceof Integer){
+            Integer id1 = (Integer) obj;
+            if (id1 != null && id1 > 0) {
+                category.setId(id);
+                return Response.status(200).entity(category).build();
+            }
+        }else {
+
+            if (obj instanceof List){
+                errors = (ArrayList<ErrorMessage>) obj;
+                System.out.println(errors);
+            }
         }
-        return Response.status(400).entity("Invalid Input for category").build();
-    }*/
+        return Response.status(406).entity(errors).build();
+    }
 
     @DELETE
     @Path("/{id}")

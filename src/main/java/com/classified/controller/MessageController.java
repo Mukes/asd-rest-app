@@ -13,6 +13,8 @@ import java.util.List;
 /**
  * Created by Zamuna on 6/18/2017.
  */
+@Path("/message")
+@Produces(MediaType.APPLICATION_JSON)
 public class MessageController {
     private MessageService messageService;
 
@@ -21,8 +23,8 @@ public class MessageController {
     }
 
     @GET
-    public Response getMessages() {
-        List<Message> messages = new ArrayList<>(messageService.getAll(null, null, null, null));
+    public Response getMessages(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
+        List<Message> messages = new ArrayList<>(messageService.getAll(search, null, offset, limit));
         System.out.println("Messages:" + messages);
         if (messages.size() > 0) {
             Response response = Response.ok(messages, MediaType.APPLICATION_JSON).build();
