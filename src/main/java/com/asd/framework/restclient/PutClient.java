@@ -60,6 +60,7 @@ public class PutClient<T> extends AbstractClient<T>{
                 response.append(output);
             }
 
+            System.out.println("Response:"+response.toString());
             if (!isSuccess) {
                 if (conn.getResponseCode()==406){
                     obj = objectMapper.readValue(response.toString(),

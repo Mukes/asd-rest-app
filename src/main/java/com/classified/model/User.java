@@ -16,11 +16,6 @@ public class User implements Serializable{
     private Long id;
     private String name;
     @Email
-    @Password
-    @Number
-    @Url
-    @DateTime
-    @Length(min = 10, max = 500)
     private String email;
     private String phone;
     private String password;

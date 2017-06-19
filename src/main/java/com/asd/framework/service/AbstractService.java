@@ -21,11 +21,13 @@ public class AbstractService<T> extends FacadeValidator<T> implements IService<T
     private Map<String, Object> valueMap;
     private AbstractDao<T> dao;
 
+    private List<String> fieldToDbFields;
     private final Class<T> clazz;
 
-    public AbstractService(Class<T> clazz) {
+    public AbstractService(Class<T> clazz, List<String> fieldToDbFields) {
         this.clazz = clazz;
         template();
+        this.fieldToDbFields = fieldToDbFields;
     }
 
     private final void template() {
@@ -96,13 +98,13 @@ public class AbstractService<T> extends FacadeValidator<T> implements IService<T
 
     @Override
     public List<T> getAll(String searchText, List<String> searchFields, String offset, String limit) {
-        return getAll(searchText, searchFields, offset, limit, clazz, false);
+        return getAll(searchText, searchFields, offset, limit, clazz, true);
     }
 
     public List<T> getAll(String searchText, List<String> searchFields, String offset, String limit, Class clazz, boolean isOverridden) {
         String condition = null;
         if (isOverridden) {
-            condition = getCondition(searchText, searchFields);
+            condition = getCondition(searchText);
         }
         List<T> t = dao.getAll(getTableName(clazz), getRelation(classToDbFieldMap(clazz)), condition, getPagination(offset, limit), clazz);
         System.out.println("Got T:" + t.toString());
@@ -112,6 +114,18 @@ public class AbstractService<T> extends FacadeValidator<T> implements IService<T
         return t;
     }
 
+    /*private String searchFields(String searchText){
+        StringBuilder query = new StringBuilder();
+        if (searchText != null && fieldToDbFields.size() > 0) {
+            query.append(" and (");
+            for (String str : fieldToDbFields) {
+                query.append(" LOWER(").append(str).append(") like LOWER('").append(searchText).append("%')").append(" or ");
+            }
+            query.delete(query.lastIndexOf(" or "), query.lastIndexOf(" or ") + 3);
+            query.append(")");
+        }
+        return query.toString();
+    }*/
     @Override
     public List<T> customGetAll(Map<String, String> conditionMap) {
         List<T> t = dao.getAll(getTableName(clazz), getRelation(classToDbFieldMap(clazz)), getCustomCondition(conditionMap), null, clazz);
@@ -227,11 +241,11 @@ public class AbstractService<T> extends FacadeValidator<T> implements IService<T
         return columns.toString();
     }
 
-    private String getCondition(String searchText, List<String> searchFields) {
-        if (searchText != null && searchFields.size() > 0) {
+    private String getCondition(String searchText) {
+        if (searchText != null && fieldToDbFields.size() > 0) {
             StringBuilder query = new StringBuilder();
             query.append("(");
-            for (String str : searchFields) {
+            for (String str : fieldToDbFields) {
                 query.append(" LOWER(").append(str).append(") like LOWER('").append(searchText).append("%')").append(" or ");
             }
             query.delete(query.lastIndexOf(" or "), query.lastIndexOf(" or ") + 3);

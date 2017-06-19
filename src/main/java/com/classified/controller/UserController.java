@@ -11,9 +11,6 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Crawlers on 6/13/2017.
- */
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserController {
@@ -25,9 +22,8 @@ public class UserController {
     }
 
     @GET
-    public Response getUsers() {
-        List<User> users = new ArrayList<>(userService.getAll(null, null, null, null));
-        System.out.println("Users:" + users);
+    public Response getUsers(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
+        List<User> users = new ArrayList<>(userService.getAll(search, null, offset, limit));
         if (users.size() > 0) {
             Response response = Response.ok(users, MediaType.APPLICATION_JSON).build();
             return response;
@@ -50,7 +46,6 @@ public class UserController {
     public Response create(User user) {
         Object obj = userService.insert(user);
         List errors = null;
-        System.out.println("instance of obj:"+obj);
         if (obj instanceof Long){
             Long id = (Long) obj;
             if (id != null && id > 0) {
@@ -60,10 +55,8 @@ public class UserController {
         }else {
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println("error:"+errors);
             }
         }
-
         return Response.status(406).entity(errors).build();
     }
 
@@ -73,9 +66,8 @@ public class UserController {
     public Response update(@PathParam("id") long id, User user) {
         Object obj = userService.update(user, id, true);
         List errors = null;
-
-        if (obj instanceof Long){
-            Long id1 = (Long) obj;
+        if (obj instanceof Integer){
+            Integer id1 = (Integer) obj;
             if (id1 != null && id1 > 0) {
                 user.setId(id);
                 return Response.status(200).entity(user).build();
@@ -87,7 +79,6 @@ public class UserController {
                 System.out.println(errors);
             }
         }
-        System.out.println(errors);
         return Response.status(406).entity(errors).build();
     }
 

@@ -5,13 +5,15 @@ import com.classified.model.User;
 import com.asd.framework.service.AbstractService;
 import com.classified.model.UserWithToken;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class UserService extends AbstractService<User> {
+    private static final List<String> searchFields = Arrays.asList("name");
     public UserService(Class<User> clazz) {
-        super(clazz);
+        super(clazz, searchFields);
     }
 
     public UserWithToken login(String uname, String password) {

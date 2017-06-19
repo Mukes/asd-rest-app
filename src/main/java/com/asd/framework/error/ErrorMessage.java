@@ -92,4 +92,14 @@ public class ErrorMessage implements Serializable {
         throwable.printStackTrace(new PrintWriter(errors));
         this.cause = errors.toString();
     }*/
+
+    @Override
+    public String toString() {
+        return "ErrorMessage{" +
+            "source=" + source +
+            ", field='" + field + '\'' +
+            ", message='" + message + '\'' +
+            ", cause='" + cause + '\'' +
+            '}';
+    }
 }
