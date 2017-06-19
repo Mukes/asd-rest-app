@@ -76,7 +76,6 @@ public class UserController {
 
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println(errors);
             }
         }
         return Response.status(406).entity(errors).build();
@@ -99,6 +98,6 @@ public class UserController {
         if (userWithToken != null) {
             return Response.status(200).entity(userWithToken).build();
         }
-        return Response.status(400).entity("User cannot be deleted").build();
+        return Response.status(400).entity("Email or Password is incorrect").build();
     }
 }

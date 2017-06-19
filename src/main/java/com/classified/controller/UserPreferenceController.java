@@ -30,7 +30,6 @@ public class UserPreferenceController {
     @GET
     public Response getUserPreferences(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
         List<UserPreference> userPreferences = new ArrayList<>(userPreferenceService.getAll(search, null, offset, limit));
-        System.out.println("UserPreferences:" + userPreferences);
         if (userPreferences.size() > 0) {
             Response response = Response.ok(userPreferences, MediaType.APPLICATION_JSON).build();
             return response;
@@ -53,7 +52,6 @@ public class UserPreferenceController {
     public Response create(UserPreference userPreference) {
         Object obj = userPreferenceService.insert(userPreference);
         List errors = null;
-        System.out.println("instance of obj:"+obj);
         if (obj instanceof Long){
             Long id = (Long) obj;
             if (id != null && id > 0) {
@@ -63,7 +61,6 @@ public class UserPreferenceController {
         }else {
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println("error:"+errors);
             }
         }
 
@@ -86,10 +83,8 @@ public class UserPreferenceController {
         }else {
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println(errors);
             }
         }
-        System.out.println(errors);
         return Response.status(406).entity(errors).build();
     }
 

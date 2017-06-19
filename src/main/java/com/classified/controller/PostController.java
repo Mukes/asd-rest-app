@@ -28,7 +28,6 @@ public class PostController {
     @GET
     public Response getPosts(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
         List<Post> posts = new ArrayList<>(postService.getAll(search, null, offset, limit));
-        System.out.println("Posts:" + posts);
         if (posts.size() > 0) {
             Response response = Response.ok(posts, MediaType.APPLICATION_JSON).build();
             return response;
@@ -49,14 +48,12 @@ public class PostController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Post post) {
-        System.out.println("post calleds");
         Object obj = postService.insert(post);
         List errors = null;
         if (obj instanceof Long){
             Long id = (Long) obj;
             if (id != null && id > 0) {
                 post.setId(id);
-                System.out.println("posted data:"+id);
                 return Response.status(201).entity(post).build();
             }
         }else {
@@ -83,7 +80,6 @@ public class PostController {
 
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println(errors);
             }
         }
         return Response.status(406).entity(errors).build();
@@ -134,7 +130,6 @@ public class PostController {
     // save uploaded file to new location
     private void writeToFile(InputStream uploadedInputStream,
                              String uploadedFileLocation) {
-        System.out.println("Write to file method New");
         try {
             OutputStream out = new FileOutputStream(new File(
                     uploadedFileLocation));
@@ -150,19 +145,6 @@ public class PostController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        File file=new File("C:\\Posts\\Zamuna\\Desktop\\car.png");
-        PostController postController=new PostController();
-        InputStream uploadedInputStream=null;
-        try {
-            uploadedInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        FormDataContentDisposition formDataContentDisposition=null;
-        //postController.uploadFile(uploadedInputStream,formDataContentDisposition, new Post());
     }
 
 }

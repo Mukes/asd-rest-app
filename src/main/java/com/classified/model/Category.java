@@ -1,6 +1,7 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.asd.framework.validation.constraints.Mandatory;
 
 /**
  * Created by 985552 on 6/15/2017.
@@ -8,7 +9,9 @@ import com.asd.framework.dao.Entity;
 @Entity
 public class Category {
     private Long id;
+    @Mandatory
     private String name;
+    @Mandatory
     private String description;
 
     public Long getId() {

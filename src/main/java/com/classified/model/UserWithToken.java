@@ -1,8 +1,5 @@
 package com.classified.model;
 
-/**
- * Created by Crawlers on 6/18/2017.
- */
 public class UserWithToken extends User{
     private String token;
 

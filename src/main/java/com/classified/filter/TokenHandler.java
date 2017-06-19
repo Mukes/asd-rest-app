@@ -14,7 +14,6 @@ class TokenHandler extends AbstractHandler<HttpServletRequest>{
     @Override
     public Boolean authorizeRequest(HttpServletRequest obj) {
         String token = obj.getHeader("Authorization");
-        System.out.println("Token:"+token);
         if(!isTokenValid(token)){
             return false;
         }else {
@@ -33,7 +32,6 @@ class TokenHandler extends AbstractHandler<HttpServletRequest>{
                     authorizationService = new AuthorizationService(Authorization.class);
                 }
                 Authorization authorization = authorizationService.getTokenByName(token);
-                System.out.println("authorization:"+authorization);
                 if (authorization!=null){
                     return true;
                 }

@@ -2,7 +2,7 @@ package com.asd.framework.service;
 
 import com.asd.framework.dao.AbstractDao;
 import com.asd.framework.error.ErrorMessage;
-//import com.asd.framework.model.AbstractMetaData;
+//import com.asd.framework.com.client.model.AbstractMetaData;
 import com.asd.framework.validation.FacadeValidator;
 
 import javax.ws.rs.core.Response;

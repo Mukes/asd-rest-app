@@ -25,7 +25,6 @@ public class MessageController {
     @GET
     public Response getMessages(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
         List<Message> messages = new ArrayList<>(messageService.getAll(search, null, offset, limit));
-        System.out.println("Messages:" + messages);
         if (messages.size() > 0) {
             Response response = Response.ok(messages, MediaType.APPLICATION_JSON).build();
             return response;
@@ -48,7 +47,6 @@ public class MessageController {
     public Response create(Message message) {
         Object obj = messageService.insert(message);
         List errors = null;
-        System.out.println("instance of obj:"+obj);
         if (obj instanceof Long){
             Long id = (Long) obj;
             if (id != null && id > 0) {
@@ -58,7 +56,6 @@ public class MessageController {
         }else {
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println("error:"+errors);
             }
         }
 
@@ -82,10 +79,8 @@ public class MessageController {
 
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println(errors);
             }
         }
-        System.out.println(errors);
         return Response.status(406).entity(errors).build();
     }
 

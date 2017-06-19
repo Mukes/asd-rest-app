@@ -1,6 +1,8 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.asd.framework.validation.constraints.Mandatory;
+import com.asd.framework.validation.constraints.Number;
 
 import java.time.LocalDate;
 
@@ -10,9 +12,12 @@ import java.time.LocalDate;
 @Entity
 public class Post {
     private Long id;
+    @Mandatory
     private Long categoryId;
+    @Mandatory
     private Long userId;
     private String title;
+    @Number
     private Integer price;
     private String description;
     private LocalDate dateOfManufacture;

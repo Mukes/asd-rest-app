@@ -27,13 +27,11 @@ public class AuthorizationFilter implements Filter{
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        System.out.println("handler:"+chainBuilder.getAbstractHandler());
         if (!chainBuilder.getAbstractHandler().authorizeRequest(httpServletRequest)){
             httpServletResponse.setContentType("application/json");
             httpServletResponse.setStatus(Response.Status.FORBIDDEN.getStatusCode());
             return;
         }else {
-            System.out.println("Success");
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
         /*if (containPath || user!=null){

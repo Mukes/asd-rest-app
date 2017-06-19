@@ -50,6 +50,7 @@ public class PostClient<T> extends AbstractClient<T>{
                     break;
                 }
             }
+            System.out.println("is success:"+ isSuccess);
             BufferedReader br = null;
             if (isSuccess){
                 br =new BufferedReader(new InputStreamReader(
@@ -64,6 +65,7 @@ public class PostClient<T> extends AbstractClient<T>{
                 response.append(output);
             }
 
+            System.out.println("Response:"+response);
             if (!isSuccess) {
                 if (conn.getResponseCode()==406){
                     obj = objectMapper.readValue(response.toString(),

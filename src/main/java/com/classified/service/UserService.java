@@ -22,14 +22,12 @@ public class UserService extends AbstractService<User> {
         map.put("password", password);
         List<User> users = customGetAll(map);
         if (users.size() > 0) {
-            System.out.println("Login Successfull");
             User user = users.get(0);
             Long id = user.getId();
             AuthorizationService authorizationService = new AuthorizationService(Authorization.class);
             String token=authorizationService.generateToken(id);
             UserWithToken userWithToken = new UserWithToken();
             userWithToken.setUser(user);
-            System.out.println("token:"+token);
             userWithToken.setToken(token);
             return userWithToken;
         }

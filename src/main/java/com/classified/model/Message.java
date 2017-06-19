@@ -1,6 +1,8 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.asd.framework.validation.constraints.Mandatory;
+import com.asd.framework.validation.constraints.Number;
 
 /**
  * Created by 985552 on 6/15/2017.
@@ -8,8 +10,13 @@ import com.asd.framework.dao.Entity;
 @Entity
 public class Message {
     private Long id;
+    @Number
+    @Mandatory
     private Long senderId;
+    @Number
+    @Mandatory
     private Long receiverId;
+    @Mandatory
     private String text;
     private Boolean read;
 

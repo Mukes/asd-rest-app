@@ -10,9 +10,6 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zamuna on 6/17/2017.
- */
 @Path("/category")
 @Produces(MediaType.APPLICATION_JSON)
 public class CategoryController {
@@ -26,7 +23,6 @@ public class CategoryController {
     @GET
     public Response getCategorys(@QueryParam("search") String search,@QueryParam("limit") String limit,@QueryParam("offset") String offset) {
         List<Category> categorys = new ArrayList<>(categoryService.getAll(search, null, offset, limit));
-        System.out.println("Categorys:" + categorys);
         if (categorys.size() > 0) {
             Response response = Response.ok(categorys, MediaType.APPLICATION_JSON).build();
             return response;
@@ -79,7 +75,6 @@ public class CategoryController {
 
             if (obj instanceof List){
                 errors = (ArrayList<ErrorMessage>) obj;
-                System.out.println(errors);
             }
         }
         return Response.status(406).entity(errors).build();

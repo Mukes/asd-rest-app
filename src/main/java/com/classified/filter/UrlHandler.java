@@ -14,7 +14,6 @@ public class UrlHandler extends AbstractHandler<HttpServletRequest>{
     @Override
     public Boolean authorizeRequest(HttpServletRequest obj) {
         String uri = obj.getRequestURI();
-        System.out.println("uri:"+uri);
         //if (uri.toString().contains())
         if (Arrays.stream(EXCLUDED_URL).parallel().anyMatch(uri::contains)){
             return true;
