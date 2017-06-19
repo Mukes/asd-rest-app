@@ -4,7 +4,6 @@ import com.asd.framework.error.ErrorMessage;
 import com.classified.model.Post;
 import com.classified.service.PostService;
 import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +16,7 @@ import java.util.List;
  * Created by Zamuna on 6/18/2017.
  */
 @Path("/post")
+@Produces(MediaType.APPLICATION_JSON)
 public class PostController {
 
     private PostService postService;
@@ -56,6 +56,7 @@ public class PostController {
             Long id = (Long) obj;
             if (id != null && id > 0) {
                 post.setId(id);
+                System.out.println("posted data:"+id);
                 return Response.status(201).entity(post).build();
             }
         }else {

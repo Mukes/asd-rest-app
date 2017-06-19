@@ -75,6 +75,7 @@ public class AbstractDao<T> implements com.asd.framework.dao.IDao<T> {
 
     private List<T> executeQuery(String tableName, String relation, String condition, String pagination, Class clazz) {
         String query = getQuery(tableName, relation, condition, pagination);
+        System.out.println("Execute Query:"+query);
         try {
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();

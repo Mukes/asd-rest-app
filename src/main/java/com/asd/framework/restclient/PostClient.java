@@ -31,7 +31,9 @@ public class PostClient<T> extends AbstractClient<T>{
 
             conn.setRequestProperty("Content-Type", "application/json");
 
-            headerMap.forEach((k, v) -> conn.setRequestProperty(k, v));
+            if (headerMap!=null){
+                headerMap.forEach((k, v) -> conn.setRequestProperty(k, v));
+            }
 
             ObjectMapper objectMapper = new ObjectMapper();
             if (data != null) {
