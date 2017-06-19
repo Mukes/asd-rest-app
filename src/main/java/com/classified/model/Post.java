@@ -18,6 +18,7 @@ public class Post {
     private LocalDate dateOfManufacture;
     private Boolean negotiable;
     private Boolean status;
+    private String url;
 
     public Long getId() {
         return id;
@@ -89,5 +90,13 @@ public class Post {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
