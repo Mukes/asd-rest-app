@@ -1,6 +1,8 @@
 package com.classified.model;
 
 import com.asd.framework.dao.Entity;
+import com.asd.framework.validation.constraints.Email;
+import com.asd.framework.validation.constraints.Password;
 import com.asd.framework.validation.constraints.*;
 import com.asd.framework.validation.constraints.Number;
 import com.fasterxml.jackson.annotation.JsonInclude;
